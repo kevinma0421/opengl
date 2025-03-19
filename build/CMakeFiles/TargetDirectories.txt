@@ -1,0 +1,4 @@
+C:/Users/123ke/projects/opengl/build/CMakeFiles/glad.dir
+C:/Users/123ke/projects/opengl/build/CMakeFiles/sat_sim.dir
+C:/Users/123ke/projects/opengl/build/CMakeFiles/edit_cache.dir
+C:/Users/123ke/projects/opengl/build/CMakeFiles/rebuild_cache.dir

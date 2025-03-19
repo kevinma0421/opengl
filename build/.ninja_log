@@ -1,0 +1,9 @@
+# ninja log v5
+36	355	7640507454441379	CMakeFiles/rocket_sim.dir/rocket_sim.cpp.obj	18a53d97314dedfc
+356	485	7640507455685390	rocket_sim.exe	ceecac6d3b73fd3a
+24	367	7640663734641348	CMakeFiles/sat_sim.dir/sat_sim.cpp.obj	6c9792c86aa20fce
+62	3096	7640524844585276	CMakeFiles/glad.dir/C_/Users/123ke/OneDrive/Documents/Projects/lib/glad/src/glad.c.obj	fc33110eee78b359
+3098	3280	7640524846449673	libglad.a	771ccc405e28931b
+367	503	7640663735938230	sat_sim.exe	ea010ca7dc73b70
+23	363	7640674057159875	CMakeFiles/sat_sim.dir/sat_sim.cpp.obj	6c9792c86aa20fce
+363	495	7640674058429693	sat_sim.exe	ea010ca7dc73b70
