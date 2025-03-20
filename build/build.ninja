@@ -46,7 +46,7 @@ build cmake_object_order_depends_target_glad: phony || CMakeFiles/glad.dir
 
 build CMakeFiles/glad.dir/C_/Users/123ke/OneDrive/Documents/Projects/lib/glad/src/glad.c.obj: C_COMPILER__glad_unscanned_ C$:/Users/123ke/OneDrive/Documents/Projects/lib/glad/src/glad.c || cmake_object_order_depends_target_glad
   DEP_FILE = CMakeFiles\glad.dir\C_\Users\123ke\OneDrive\Documents\Projects\lib\glad\src\glad.c.obj.d
-  INCLUDES = -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glfw/glfw/include -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glad/include
+  INCLUDES = -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glfw/glfw/include -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glad/include -IC:/Users/123ke/projects/opengl -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glm/install/include/glm
   OBJECT_DIR = CMakeFiles\glad.dir
   OBJECT_FILE_DIR = CMakeFiles\glad.dir\C_\Users\123ke\OneDrive\Documents\Projects\lib\glad\src
 
@@ -77,7 +77,14 @@ build cmake_object_order_depends_target_sat_sim: phony || cmake_object_order_dep
 build CMakeFiles/sat_sim.dir/sat_sim.cpp.obj: CXX_COMPILER__sat_sim_unscanned_ C$:/Users/123ke/projects/opengl/sat_sim.cpp || cmake_object_order_depends_target_sat_sim
   DEP_FILE = CMakeFiles\sat_sim.dir\sat_sim.cpp.obj.d
   FLAGS = -std=gnu++17
-  INCLUDES = -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glfw/glfw/include -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glad/include
+  INCLUDES = -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glfw/glfw/include -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glad/include -IC:/Users/123ke/projects/opengl -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glm/install/include/glm
+  OBJECT_DIR = CMakeFiles\sat_sim.dir
+  OBJECT_FILE_DIR = CMakeFiles\sat_sim.dir
+
+build CMakeFiles/sat_sim.dir/sphere.cpp.obj: CXX_COMPILER__sat_sim_unscanned_ C$:/Users/123ke/projects/opengl/sphere.cpp || cmake_object_order_depends_target_sat_sim
+  DEP_FILE = CMakeFiles\sat_sim.dir\sphere.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glfw/glfw/include -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glad/include -IC:/Users/123ke/projects/opengl -IC:/Users/123ke/OneDrive/Documents/Projects/lib/glm/install/include/glm
   OBJECT_DIR = CMakeFiles\sat_sim.dir
   OBJECT_FILE_DIR = CMakeFiles\sat_sim.dir
 
@@ -89,7 +96,7 @@ build CMakeFiles/sat_sim.dir/sat_sim.cpp.obj: CXX_COMPILER__sat_sim_unscanned_ C
 #############################################
 # Link the executable sat_sim.exe
 
-build sat_sim.exe: CXX_EXECUTABLE_LINKER__sat_sim_ CMakeFiles/sat_sim.dir/sat_sim.cpp.obj | libglad.a || libglad.a
+build sat_sim.exe: CXX_EXECUTABLE_LINKER__sat_sim_ CMakeFiles/sat_sim.dir/sat_sim.cpp.obj CMakeFiles/sat_sim.dir/sphere.cpp.obj | libglad.a || libglad.a
   LINK_LIBRARIES = libglad.a  -lglfw3  -lopengl32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/Users/123ke/OneDrive/Documents/Projects/lib/glfw/glfw/lib-mingw-w64
   OBJECT_DIR = CMakeFiles\sat_sim.dir
