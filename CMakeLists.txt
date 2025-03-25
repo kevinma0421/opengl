@@ -43,11 +43,22 @@ endif()
 # Add GLAD as a static library
 add_library(glad ${GLAD_SRC})
 
-# Create the executable, adding Sphere.cpp
-add_executable(sat_sim sat_sim.cpp Sphere.cpp)
+# Recursively collect all source and header files in core
+file(GLOB_RECURSE CORE_SRC "core/src/*.cpp")
+file(GLOB_RECURSE CORE_HEADERS "core/inc/*.h")
 
-# Link the libraries
+# Add executable target
+add_executable(sat_sim ${CORE_SRC})
+
+# Include directories
+target_include_directories(sat_sim PRIVATE core/inc)
+
+# Link libraries
 target_link_libraries(sat_sim glad glfw3 opengl32)
+
+# Add shaders as a folder
+file(GLOB SHADERS "shaders/*")
+source_group("Shaders" FILES ${SHADERS})
 
 # Print Final Configuration
 message(STATUS "Configuration Complete!")
