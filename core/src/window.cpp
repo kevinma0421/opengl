@@ -23,6 +23,15 @@ Window::Window(int width, int height, const std::string &title)
     glViewport(0, 0, width, height);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    // render window in center of screen
+    GLFWmonitor *primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode *videoMode = glfwGetVideoMode(primaryMonitor);
+    int screenWidth = videoMode->width;
+    int screenHeight = videoMode->height;
+    int xpos = (screenWidth - width) / 2;
+    int ypos = (screenHeight - height) / 2;
+    glfwSetWindowPos(window, xpos, ypos);
 }
 
 Window::~Window()
