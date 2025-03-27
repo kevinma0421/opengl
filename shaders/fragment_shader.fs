@@ -3,9 +3,9 @@
 in vec2 TexCoord;
 out vec4 FragColor;
 
-uniform sampler2D earthTexture;
+uniform sampler2D sphereTexture;
 
 void main()
 {
-    FragColor = texture(earthTexture, TexCoord);
+    FragColor = texture(sphereTexture, TexCoord);
 }

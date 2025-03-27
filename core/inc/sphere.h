@@ -14,6 +14,7 @@ public:
     void generateSphere(); // Function to generate vertices & indices
     void setupBuffers();   // Function to set up OpenGL buffers
     void render();         // Function to render the sphere
+    GLuint setTexture(const char *texturePath);
 
 private:
     float radius;
