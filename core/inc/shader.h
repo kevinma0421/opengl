@@ -15,7 +15,7 @@ public:
     void setFloat(const std::string &name, float value) const;
 
     void setVec4(const std::string &name, float r, float g, float b, float a) const;
-    void setTexture(const char *vertexPath);
+    void setMat4(const std::string &name, const glm::mat4 &mat) const;
 
 private:
     unsigned int ID;

@@ -6,6 +6,9 @@
 
 #include "Sphere.h"
 #include "stb.h"
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -120,4 +123,10 @@ GLuint Sphere::setTexture(const char *texturePath)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     return earthTexture;
+}
+void Sphere::rotate(const Shader &myShader, float speed)
+{
+    glm::mat4 rotation = glm::mat4(1.0f);
+    rotation = glm::rotate(rotation, (float)glfwGetTime() * speed, glm::vec3(0.0f, 1.0f, 0.0f));
+    myShader.setMat4("rotation", rotation);
 }

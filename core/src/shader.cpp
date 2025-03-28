@@ -1,6 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm.hpp>
 
 #include "Shader.h"
 #include "utils.h"
@@ -63,4 +64,9 @@ void Shader::setFloat(const std::string &name, float value) const
 void Shader::setVec4(const std::string &name, float r, float g, float b, float a) const
 {
     glUniform4f(glGetUniformLocation(ID, name.c_str()), r, g, b, a);
+}
+void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
+{
+    GLint location = glGetUniformLocation(ID, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, &mat[0][0]);
 }

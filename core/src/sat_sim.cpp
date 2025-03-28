@@ -12,6 +12,7 @@
 #include "shader.h"
 #include "window.h"
 #include "stb.h"
+#include "input.h"
 
 // Shader Paths
 const char *vertexPath = "C:/Users/123ke/projects/opengl/shaders/vertex_shader.vs";
@@ -25,7 +26,7 @@ int main()
     // Create objects
     Window myWindow(800, 800, "sat_sim");
     Shader myShader(vertexPath, fragmentPath);
-    Sphere mySphere(1.0f, 50, 50);
+    Sphere mySphere(1.0f, 100, 100);
 
     // GL Inits
     glEnable(GL_DEPTH_TEST);
@@ -36,18 +37,7 @@ int main()
     // Main render loop
     while (!myWindow.shouldClose())
     {
-        if (glfwGetKey(myWindow.getGLFWwindow(), GLFW_KEY_P) == GLFW_PRESS)
-        {
-            if (!pWasPressed)
-            {
-                togglePolygonMode();
-                pWasPressed = true;
-            }
-        }
-        else
-        {
-            pWasPressed = false;
-        }
+        processInput(myWindow.getGLFWwindow());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         myShader.use();
@@ -55,20 +45,10 @@ int main()
         glBindTexture(GL_TEXTURE_2D, sphereTexture);
         myShader.setInt("sphereTexture", 0);
         mySphere.render();
-
+        mySphere.rotate(myShader, -0.6);
         myWindow.pollEvents();
         myWindow.swapBuffers();
     }
 
     return 0;
-}
-void togglePolygonMode()
-{
-    static bool wireframe = false;
-    wireframe = !wireframe;
-
-    if (wireframe)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    else
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <glad/glad.h> // OpenGL functions
-// #include <glm/glm.hpp> // Math library
+#include <glm.hpp>     // Math library
+#include "shader.h"
 
 class Sphere
 {
@@ -15,6 +16,8 @@ public:
     void setupBuffers();   // Function to set up OpenGL buffers
     void render();         // Function to render the sphere
     GLuint setTexture(const char *texturePath);
+
+    void rotate(const Shader &myShader, float speed);
 
 private:
     float radius;
