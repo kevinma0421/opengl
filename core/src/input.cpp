@@ -1,6 +1,6 @@
 #include "input.h"
 
-static bool wireframe = false;
+static bool wireframe = true;
 static bool pKeyPressed = false;
 
 void processInput(GLFWwindow *window)
