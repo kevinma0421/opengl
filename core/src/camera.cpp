@@ -22,3 +22,8 @@ void Camera::setTarget(const glm::vec3 &tgt)
 {
     target = tgt;
 }
+void Camera::setScreenSize(float w, float h)
+{
+    screenWidth = w;
+    screenHeight = h;
+}

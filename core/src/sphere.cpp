@@ -48,8 +48,10 @@ void Sphere::generateSphere()
             vertices.push_back(z * radius);
 
             // UV coordinates
-            vertices.push_back(1.0f - (float)j / slices);
-            vertices.push_back((float)i / stacks);
+            float u = 1.0f - (float)j / slices;
+            float v = (float)i / stacks;
+            vertices.push_back(u);
+            vertices.push_back(v);
         }
     }
 
@@ -123,15 +125,20 @@ GLuint Sphere::setTexture(const char *texturePath)
 
     // Texture settings
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLfloat aniso = 0.0f;
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &aniso);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, aniso);
     return earthTexture;
 }
 void Sphere::rotate(const Shader &myShader, float speed, float tilt)
 {
     glm::mat4 rotation = glm::mat4(1.0f);
     rotation = glm::rotate(rotation, glm::radians(tilt), glm::vec3(0.0f, 0.0f, 1.0f));
+    // rotation = glm::rotate(rotation, glm::radians(-tilt), glm::vec3(1.0f, 0.0f, 0.0f));
     rotation = glm::rotate(rotation, (float)glfwGetTime() * speed, glm::vec3(0.0f, 1.0f, 0.0f));
     myShader.setMat4("rotation", rotation);
 }

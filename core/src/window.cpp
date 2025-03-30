@@ -4,6 +4,7 @@
 
 #include "Window.h"
 #include "utils.h"
+#include "camera.h"
 
 Window::Window(int width, int height, const std::string &title)
 {
@@ -11,14 +12,14 @@ Window::Window(int width, int height, const std::string &title)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES, 8);
+    glfwWindowHint(GLFW_SAMPLES, 4);
     window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if (!window)
     {
         logMessage("GLFW Window creation failed!");
     }
     glfwMakeContextCurrent(window);
-
+    glfwSwapInterval(2); // vsync
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     glEnable(GL_MULTISAMPLE);
     glViewport(0, 0, width, height);
@@ -49,4 +50,7 @@ GLFWwindow *Window::getGLFWwindow() const { return window; }
 void Window::framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    Camera *cam = static_cast<Camera *>(glfwGetWindowUserPointer(window));
+    if (cam)
+        cam->setScreenSize(static_cast<float>(width), static_cast<float>(height));
 }
