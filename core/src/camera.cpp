@@ -1,11 +1,26 @@
 #include "camera.h"
 
-Camera::Camera(float screenWidth, float screenHeight, glm::vec3 position, glm::vec3 target, glm::vec3 up)
-    : position(position), target(target), up(up), screenWidth(screenWidth), screenHeight(screenHeight) {}
+Camera::Camera(float screenWidth, float screenHeight,
+               float radius, float yaw, float pitch,
+               glm::vec3 center, glm::vec3 up)
+    : screenWidth(screenWidth),
+      screenHeight(screenHeight),
+      radius(radius),
+      yaw(yaw),
+      pitch(pitch),
+      center(center),
+      up(up)
+{
+}
 
 glm::mat4 Camera::getViewMatrix() const
 {
-    return glm::lookAt(position, target, up);
+    float x = center.x + radius * cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+    float y = center.y + radius * sin(glm::radians(pitch));
+    float z = center.z + radius * cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+
+    glm::vec3 cameraPos = glm::vec3(x, y, z);
+    return glm::lookAt(cameraPos, center, up);
 }
 
 glm::mat4 Camera::getProjectionMatrix() const
@@ -13,17 +28,44 @@ glm::mat4 Camera::getProjectionMatrix() const
     return glm::perspective(glm::radians(fov), screenWidth / screenHeight, nearPlane, farPlane);
 }
 
-void Camera::setPosition(const glm::vec3 &pos)
-{
-    position = pos;
-}
-
-void Camera::setTarget(const glm::vec3 &tgt)
-{
-    target = tgt;
-}
 void Camera::setScreenSize(float w, float h)
 {
     screenWidth = w;
     screenHeight = h;
+}
+void Camera::processScroll(float yOffset)
+{
+    radius -= yOffset;
+    radius = glm::clamp<float>(radius, 2.0f, 15.0f);
+}
+void Camera::setMouse(GLFWwindow *window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT)
+    {
+        if (action == GLFW_PRESS)
+        {
+            isDragging = true;
+            glfwGetCursorPos(window, &lastX, &lastY);
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            isDragging = false;
+        }
+    }
+}
+void Camera::setCursor(GLFWwindow *window, double xpos, double ypos)
+{
+    if (isDragging)
+    {
+        float dx = static_cast<float>(xpos - lastX);
+        float dy = static_cast<float>(ypos - lastY);
+
+        lastX = xpos;
+        lastY = ypos;
+
+        yaw += dx * sensitivity;
+        pitch += dy * sensitivity;
+
+        pitch = glm::clamp(pitch, -89.0f, 89.0f); // prevent flip
+    }
 }

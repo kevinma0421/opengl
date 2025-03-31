@@ -32,7 +32,7 @@ int main()
     Window myWindow(width, height, "sat_sim");
     Shader myShader(vertexPath, fragmentPath);
     Sphere mySphere(1.0f, 100, 100);
-    Camera mycamera(static_cast<float>(width), static_cast<float>(height));
+    Camera myCamera(static_cast<float>(width), static_cast<float>(height));
 
     // GL Inits
     glEnable(GL_DEPTH_TEST);
@@ -40,10 +40,18 @@ int main()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-    glfwSetWindowUserPointer(myWindow.getGLFWwindow(), &mycamera);
+
+    glfwSetWindowUserPointer(myWindow.getGLFWwindow(), &myCamera);
+
+    glfwSetScrollCallback(myWindow.getGLFWwindow(), Window::scroll_callback);
+    glfwSetMouseButtonCallback(myWindow.getGLFWwindow(), Window::mouse_button_callback);
+    glfwSetCursorPosCallback(myWindow.getGLFWwindow(), Window::cursor_position_callback);
 
     GLuint sphereTexture = mySphere.setTexture(earthPath);
 
+    // Set planet tilt and rotation speed (to be modifed later with GUI)
+    float spinSpeed = 2 * glm::pi<float>() / 10.0f;
+    float tilt = 23.5f;
     while (!myWindow.shouldClose())
     {
         // ----------- 1. Handle inputs ----------
@@ -53,11 +61,10 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // ----------- 3. Set common shader uniforms ----------
+        glm::mat4 model = mySphere.rotate(myShader, spinSpeed, tilt);
         myShader.use();
-        myShader.setInt("sphereTexture", 0);
-        myShader.setMat4("view", mycamera.getViewMatrix());
-        myShader.setMat4("projection", mycamera.getProjectionMatrix());
-        mySphere.rotate(myShader, 1.4f, -23.5f);
+        myShader.setMat4("projection", myCamera.getProjectionMatrix());
+        myShader.setMat4("view", myCamera.getViewMatrix());
 
         // ----------- 4. Bind textures ----------
         glActiveTexture(GL_TEXTURE0);
@@ -65,13 +72,13 @@ int main()
 
         // ----------- 5. Render base filled sphere ----------
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        mySphere.render(myShader);
+        mySphere.render(myShader, model);
 
         // ----------- 6. Render wireframe overlay on top ----------
         glEnable(GL_POLYGON_OFFSET_LINE);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         myShader.use();
-        mySphere.render(myShader);
+        mySphere.render(myShader, model);
 
         myWindow.swapBuffers();
         myWindow.pollEvents();

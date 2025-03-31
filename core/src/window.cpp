@@ -51,6 +51,20 @@ void Window::framebuffer_size_callback(GLFWwindow *window, int width, int height
 {
     glViewport(0, 0, width, height);
     Camera *cam = static_cast<Camera *>(glfwGetWindowUserPointer(window));
-    if (cam)
-        cam->setScreenSize(static_cast<float>(width), static_cast<float>(height));
+    cam->setScreenSize(static_cast<float>(width), static_cast<float>(height));
+}
+void Window::scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    Camera *cam = static_cast<Camera *>(glfwGetWindowUserPointer(window));
+    cam->processScroll(static_cast<float>(yoffset));
+}
+void Window::mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
+{
+    Camera *cam = static_cast<Camera *>(glfwGetWindowUserPointer(window));
+    cam->setMouse(window, button, action, mods);
+}
+void Window::cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
+{
+    Camera *cam = static_cast<Camera *>(glfwGetWindowUserPointer(window));
+    cam->setCursor(window, xpos, ypos);
 }
