@@ -69,3 +69,9 @@ void Camera::setCursor(GLFWwindow *window, double xpos, double ypos)
         pitch = glm::clamp(pitch, -89.0f, 89.0f); // prevent flip
     }
 }
+void Camera::reset()
+{
+    radius = 5.0f;
+    yaw = -90.0f;
+    pitch = 0.0f;
+}

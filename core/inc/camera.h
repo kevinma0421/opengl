@@ -20,6 +20,7 @@ public:
     void processScroll(float yOffset);
     void setMouse(GLFWwindow *window, int button, int action, int mods);
     void setCursor(GLFWwindow *window, double xpos, double ypos);
+    void reset();
 
 private:
     // Orbiting parameters

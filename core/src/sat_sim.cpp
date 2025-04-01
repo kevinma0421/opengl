@@ -14,6 +14,9 @@
 #include "stb.h"
 #include "input.h"
 #include "camera.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 // window sizes
 const int height = 800;
@@ -33,6 +36,16 @@ int main()
     Shader myShader(vertexPath, fragmentPath);
     Sphere mySphere(1.0f, 100, 100);
     Camera myCamera(static_cast<float>(width), static_cast<float>(height));
+
+    // ImGUI inits
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
+
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(myWindow.getGLFWwindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
     // GL Inits
     glEnable(GL_DEPTH_TEST);
@@ -60,6 +73,20 @@ int main()
         // ----------- 2. Prepare frame ----------
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // ----------- 2.5 ImGui frame ----------
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Controls");
+        ImGui::SliderFloat("Spin Speed", &spinSpeed, 0.0f, 10.0f);
+        if (ImGui::Button("Reset Camera"))
+        {
+            myCamera.reset();
+            spinSpeed = 2 * glm::pi<float>() / 10.0f;
+        }
+        ImGui::End();
+
         // ----------- 3. Set common shader uniforms ----------
         glm::mat4 model = mySphere.rotate(myShader, spinSpeed, tilt);
         myShader.use();
@@ -80,8 +107,13 @@ int main()
         myShader.use();
         mySphere.render(myShader, model);
 
+        // ----------- 7. ImGui render ----------
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         myWindow.swapBuffers();
         myWindow.pollEvents();
+
         static double lastTime = glfwGetTime();
         static int frameCount = 0;
 
@@ -95,6 +127,11 @@ int main()
             lastTime = currentTime;
         }
     }
+
+    // Im Gui shutdown
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     return 0;
 }
