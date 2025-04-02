@@ -1,16 +1,21 @@
-#ifndef PLANET_H
-#define PLANET_H
+#pragma once
 
 #include <string>
 #include <glad/glad.h>
 
 #include "Sphere.h"
+#include "camera.h"
 
 class Planet : public Sphere
 {
 public:
-    // needs to be changed
-    Planet(const char *texturePath);
-};
+    float tilt;
+    float rotationSpeed;
 
-#endif
+    Planet(const char *texturePath);
+
+    void renderEarth(Shader &shader, Camera &camera);
+
+private:
+    GLuint planetTexture;
+};

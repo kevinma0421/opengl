@@ -14,9 +14,8 @@
 #include "stb.h"
 #include "input.h"
 #include "camera.h"
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "gui.h"
+#include "planet.h"
 
 // window sizes
 const int height = 800;
@@ -34,18 +33,9 @@ int main()
     // Create objects
     Window myWindow(width, height, "sat_sim");
     Shader myShader(vertexPath, fragmentPath);
-    Sphere mySphere(1.0f, 100, 100);
+    Planet earth(earthPath);
     Camera myCamera(static_cast<float>(width), static_cast<float>(height));
-
-    // ImGUI inits
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    (void)io;
-
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(myWindow.getGLFWwindow(), true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    Gui myGui(myWindow.getGLFWwindow());
 
     // GL Inits
     glEnable(GL_DEPTH_TEST);
@@ -60,78 +50,26 @@ int main()
     glfwSetMouseButtonCallback(myWindow.getGLFWwindow(), Window::mouse_button_callback);
     glfwSetCursorPosCallback(myWindow.getGLFWwindow(), Window::cursor_position_callback);
 
-    GLuint sphereTexture = mySphere.setTexture(earthPath);
-
-    // Set planet tilt and rotation speed (to be modifed later with GUI)
-    float spinSpeed = 2 * glm::pi<float>() / 10.0f;
-    float tilt = 23.5f;
     while (!myWindow.shouldClose())
     {
-        // ----------- 1. Handle inputs ----------
-        processInput(myWindow.getGLFWwindow());
-
-        // ----------- 2. Prepare frame ----------
+        // prep frame
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // ----------- 2.5 ImGui frame ----------
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        // input handling
+        processInput(myWindow.getGLFWwindow());
 
-        ImGui::Begin("Controls");
-        ImGui::SliderFloat("Spin Speed", &spinSpeed, 0.0f, 10.0f);
-        if (ImGui::Button("Reset Camera"))
-        {
-            myCamera.reset();
-            spinSpeed = 2 * glm::pi<float>() / 10.0f;
-        }
-        ImGui::End();
+        // GUI frame
+        myGui.frame(myCamera, earth.rotationSpeed);
 
-        // ----------- 3. Set common shader uniforms ----------
-        glm::mat4 model = mySphere.rotate(myShader, spinSpeed, tilt);
-        myShader.use();
-        myShader.setMat4("projection", myCamera.getProjectionMatrix());
-        myShader.setMat4("view", myCamera.getViewMatrix());
+        // render Earth
+        earth.renderEarth(myShader, myCamera);
 
-        // ----------- 4. Bind textures ----------
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, sphereTexture);
-
-        // ----------- 5. Render base filled sphere ----------
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        mySphere.render(myShader, model);
-
-        // ----------- 6. Render wireframe overlay on top ----------
-        glEnable(GL_POLYGON_OFFSET_LINE);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        myShader.use();
-        mySphere.render(myShader, model);
-
-        // ----------- 7. ImGui render ----------
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        // render Gui
+        myGui.render();
 
         myWindow.swapBuffers();
         myWindow.pollEvents();
-
-        static double lastTime = glfwGetTime();
-        static int frameCount = 0;
-
-        double currentTime = glfwGetTime();
-        frameCount++;
-
-        if (currentTime - lastTime >= 1.0)
-        {
-            logMessage(std::to_string(frameCount));
-            frameCount = 0;
-            lastTime = currentTime;
-        }
     }
-
-    // Im Gui shutdown
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 
     return 0;
 }
