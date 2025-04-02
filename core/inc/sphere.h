@@ -17,7 +17,7 @@ public:
     void render(const Shader &myShader, const glm::mat4 &model); // Function to render the sphere
     GLuint setTexture(const char *texturePath);
 
-    glm::mat4 rotate(const Shader &myShader, float speed, float tilt);
+    glm::mat4 rotate(const Shader &myShader, float tilt, float angle);
 
 private:
     float radius;

@@ -25,7 +25,11 @@ glm::mat4 Camera::getViewMatrix() const
 
 glm::mat4 Camera::getProjectionMatrix() const
 {
-    return glm::perspective(glm::radians(fov), screenWidth / screenHeight, nearPlane, farPlane);
+    float aspect = (screenHeight != 0)
+                       ? static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
+                       : 1.0f;
+
+    return glm::perspective(glm::radians(fov), aspect, nearPlane, farPlane);
 }
 
 void Camera::setScreenSize(float w, float h)

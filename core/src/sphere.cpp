@@ -133,11 +133,10 @@ GLuint Sphere::setTexture(const char *texturePath)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, aniso);
     return earthTexture;
 }
-glm::mat4 Sphere::rotate(const Shader &myShader, float speed, float tilt)
+glm::mat4 Sphere::rotate(const Shader &myShader, float tilt, float angle)
 {
     glm::mat4 rotation = glm::mat4(1.0f);
-    rotation = glm::rotate(rotation, glm::radians(tilt), glm::vec3(0.0f, 0.0f, 1.0f));
-    // rotation = glm::rotate(rotation, glm::radians(-tilt), glm::vec3(1.0f, 0.0f, 0.0f));
-    rotation = glm::rotate(rotation, (float)glfwGetTime() * speed, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotation = glm::rotate(rotation, glm::radians(tilt), glm::vec3(0.0f, 0.0f, 1.0f)); // tilt the axis
+    rotation = glm::rotate(rotation, angle, glm::vec3(0.0f, 1.0f, 0.0f));              // spin around tilted axis
     return rotation;
 }
