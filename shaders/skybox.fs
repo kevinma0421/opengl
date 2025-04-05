@@ -1,5 +1,11 @@
 #version 330 core
+
+in vec3 TexCoords;       // from vertex shader
 out vec4 FragColor;
+
+uniform samplerCube skybox;
+
 void main() {
-    FragColor = vec4(0.2, 0.6, 1.0, 1.0); 
+    FragColor = texture(skybox, TexCoords);
 }
+

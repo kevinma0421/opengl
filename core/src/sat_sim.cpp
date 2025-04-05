@@ -29,23 +29,6 @@ const char *skyboxfs = "C:/Users/123ke/projects/opengl/shaders/skybox.fs";
 const char *skyboxvs = "C:/Users/123ke/projects/opengl/shaders/skybox.vs";
 const char *earthPath = "C:/Users/123ke/projects/opengl/textures/earth10kcopy.jpg";
 
-// Cubemap Paths
-const char *space_back = "C:/Users/123ke/projects/opengl/textures/skybox/space_bk.png";
-const char *space_bottom = "C:/Users/123ke/projects/opengl/textures/skybox/space_dn.png";
-const char *space_front = "C:/Users/123ke/projects/opengl/textures/skybox/space_ft.png";
-const char *space_left = "C:/Users/123ke/projects/opengl/textures/skybox/space_lf.png";
-const char *space_right = "C:/Users/123ke/projects/opengl/textures/skybox/space_rt.png";
-const char *space_top = "C:/Users/123ke/projects/opengl/textures/skybox/space_up.png";
-
-// Skybox init
-const std::vector<std::string> skyboxFaces = {
-    space_right,  // +X
-    space_left,   // -X
-    space_top,    // +Y
-    space_bottom, // -Y
-    space_front,  // +Z
-    space_back    // -Z
-};
 int main()
 {
     // Create objects
@@ -53,12 +36,12 @@ int main()
     Planet earth(earthPath, earthvs, earthfs);
     Camera myCamera(static_cast<float>(width), static_cast<float>(height));
     Gui myGui(myWindow.getGLFWwindow());
-    Skybox skybox(skyboxFaces, skyboxvs, skyboxfs);
+    Skybox skybox(skyboxvs, skyboxfs);
 
     // GL Inits
     glEnable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
@@ -80,7 +63,7 @@ int main()
         myGui.frame(myCamera, earth.rotationSpeed);
 
         // render Earth
-        // earth.renderEarth(myCamera);
+        earth.renderEarth(myCamera);
 
         // render cubeMap
         skybox.render(myCamera);

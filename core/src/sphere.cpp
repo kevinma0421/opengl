@@ -98,11 +98,8 @@ void Sphere::setupBuffers()
     glBindVertexArray(0);
 }
 
-void Sphere::render(const Shader &shader, const glm::mat4 &model)
+void Sphere::render(const Shader &shader)
 {
-    // model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f)); // < 0 or lese it will move in front of camera
-    shader.setMat4("model", model);
-
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
@@ -128,9 +125,9 @@ GLuint Sphere::setTexture(const char *texturePath)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    GLfloat aniso = 0.0f;
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &aniso);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, aniso);
+    // GLfloat aniso = 0.0f;
+    // glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &aniso);
+    // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, aniso);
     return texture;
 }
 glm::mat4 Sphere::rotate(float tilt, float angle)

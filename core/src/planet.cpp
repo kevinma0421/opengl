@@ -26,18 +26,20 @@ void Planet::renderEarth(Camera &camera)
 
     glm::mat4 model = rotate(tilt, currentAngle);
     shader.use();
+    shader.setInt("sphereTexture", 0);
     shader.setMat4("projection", camera.getProjectionMatrix());
     shader.setMat4("view", camera.getViewMatrix());
-
+    shader.setMat4("model", model);
     // Render solid sphere
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    render(shader, model);
+    render(shader);
 
     // Render wire overlay on top
     glEnable(GL_POLYGON_OFFSET_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     shader.use();
-    render(shader, model);
+    render(shader);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 void Planet::update()
 {

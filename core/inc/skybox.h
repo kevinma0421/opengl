@@ -11,14 +11,31 @@
 class Skybox
 {
 public:
-    Skybox(const std::vector<std::string> &faces, const char *skyboxfs, const char *skyboxvs);
-    void render(Camera camera);
+    Skybox(const char *skyboxfs, const char *skyboxvs);
+    void render(Camera &camera);
 
 private:
     GLuint skyboxVAO, skyboxVBO;
-    GLuint cubemapTexture;
+    GLuint cubemapTexture = 0;
     Shader skyboxShader;
 
-    GLuint loadCubemap(const std::vector<std::string> &faces);
+    GLuint loadTexture();
     void setupBuffers();
+
+    // Cubemap Paths
+    const char *space_1 = "C:/Users/123ke/projects/opengl/textures/skybox/space_bk.png";
+    const char *space_2 = "C:/Users/123ke/projects/opengl/textures/skybox/space_ft.png";
+    const char *space_3 = "C:/Users/123ke/projects/opengl/textures/skybox/space_dn.png";
+    const char *space_4 = "C:/Users/123ke/projects/opengl/textures/skybox/space_up.png";
+    const char *space_5 = "C:/Users/123ke/projects/opengl/textures/skybox/space_lf.png";
+    const char *space_6 = "C:/Users/123ke/projects/opengl/textures/skybox/space_rt.png";
+
+    // Skybox init
+    std::vector<std::string> faces = {
+        space_1,
+        space_2,
+        space_3,
+        space_4,
+        space_5,
+        space_6};
 };
