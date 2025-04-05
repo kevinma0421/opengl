@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <string>
 #include <glad/glad.h>
@@ -20,5 +19,3 @@ public:
 private:
     unsigned int ID;
 };
-
-#endif

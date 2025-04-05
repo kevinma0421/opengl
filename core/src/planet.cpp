@@ -9,34 +9,35 @@
 #include "stb.h"
 #include <planet.h>
 
-Planet::Planet(const char *texturePath) : Sphere(1.0f, 100, 100)
+Planet::Planet(const char *texturePath, const char *vertexShader, const char *fragmentShader)
+    : Sphere(1.0f, 100, 100),
+      shader(vertexShader, fragmentShader),
+      planetTexture(setTexture(texturePath))
 {
-    this->planetTexture = this->setTexture(texturePath);
-
     rotationSpeed = 2 * glm::pi<float>() / 86164.0f;
     tilt = 23.5f;
 }
-void Planet::renderEarth(Shader &shader, Camera &camera)
+void Planet::renderEarth(Camera &camera)
 {
-    this->update();
+    update();
     // set texture
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, planetTexture);
 
-    glm::mat4 model = this->rotate(shader, this->tilt, this->currentAngle);
+    glm::mat4 model = rotate(tilt, currentAngle);
     shader.use();
     shader.setMat4("projection", camera.getProjectionMatrix());
     shader.setMat4("view", camera.getViewMatrix());
 
     // Render solid sphere
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    this->render(shader, model);
+    render(shader, model);
 
     // Render wire overlay on top
     glEnable(GL_POLYGON_OFFSET_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     shader.use();
-    this->render(shader, model);
+    render(shader, model);
 }
 void Planet::update()
 {

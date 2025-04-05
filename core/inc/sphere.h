@@ -12,12 +12,12 @@ public:
     Sphere(float radius, int stacks, int slices); // Constructor
     ~Sphere();                                    // Destructor
 
-    void generateSphere();                                       // Function to generate vertices & indices
-    void setupBuffers();                                         // Function to set up OpenGL buffers
-    void render(const Shader &myShader, const glm::mat4 &model); // Function to render the sphere
+    void generateSphere();                                     // Function to generate vertices & indices
+    void setupBuffers();                                       // Function to set up OpenGL buffers
+    void render(const Shader &shader, const glm::mat4 &model); // Function to render the sphere
     GLuint setTexture(const char *texturePath);
 
-    glm::mat4 rotate(const Shader &myShader, float tilt, float angle);
+    glm::mat4 rotate(float tilt, float angle);
 
 private:
     float radius;

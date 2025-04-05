@@ -98,10 +98,10 @@ void Sphere::setupBuffers()
     glBindVertexArray(0);
 }
 
-void Sphere::render(const Shader &myShader, const glm::mat4 &model)
+void Sphere::render(const Shader &shader, const glm::mat4 &model)
 {
     // model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f)); // < 0 or lese it will move in front of camera
-    myShader.setMat4("model", model);
+    shader.setMat4("model", model);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -113,9 +113,9 @@ GLuint Sphere::setTexture(const char *texturePath)
     int width, height, nrChannels;
     unsigned char *data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
 
-    GLuint earthTexture;
-    glGenTextures(1, &earthTexture);
-    glBindTexture(GL_TEXTURE_2D, earthTexture);
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
                  nrChannels == 4 ? GL_RGBA : GL_RGB,
                  GL_UNSIGNED_BYTE, data);
@@ -131,9 +131,9 @@ GLuint Sphere::setTexture(const char *texturePath)
     GLfloat aniso = 0.0f;
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &aniso);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, aniso);
-    return earthTexture;
+    return texture;
 }
-glm::mat4 Sphere::rotate(const Shader &myShader, float tilt, float angle)
+glm::mat4 Sphere::rotate(float tilt, float angle)
 {
     glm::mat4 rotation = glm::mat4(1.0f);
     rotation = glm::rotate(rotation, glm::radians(tilt), glm::vec3(0.0f, 0.0f, 1.0f)); // tilt the axis
