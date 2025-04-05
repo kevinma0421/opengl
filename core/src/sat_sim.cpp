@@ -27,7 +27,7 @@ const char *earthvs = "C:/Users/123ke/projects/opengl/shaders/earth.vs";
 const char *earthfs = "C:/Users/123ke/projects/opengl/shaders/earth.fs";
 const char *skyboxfs = "C:/Users/123ke/projects/opengl/shaders/skybox.fs";
 const char *skyboxvs = "C:/Users/123ke/projects/opengl/shaders/skybox.vs";
-const char *earthPath = "C:/Users/123ke/projects/opengl/textures/earth10kcopy.jpg";
+const char *earthPath = "C:/Users/123ke/projects/opengl/textures/earth4k.jpg";
 
 int main()
 {
