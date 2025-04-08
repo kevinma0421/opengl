@@ -22,19 +22,22 @@
 const int height = 800;
 const int width = 800;
 
-// Shader Paths
+// Paths
 const char *earthvs = "C:/Users/123ke/projects/opengl/shaders/earth.vs";
 const char *earthfs = "C:/Users/123ke/projects/opengl/shaders/earth.fs";
 const char *skyboxfs = "C:/Users/123ke/projects/opengl/shaders/skybox.fs";
 const char *skyboxvs = "C:/Users/123ke/projects/opengl/shaders/skybox.vs";
+const char *lightfs = "C:/Users/123ke/projects/opengl/shaders/light.fs";
+const char *lightvs = "C:/Users/123ke/projects/opengl/shaders/light.vs";
+
 const char *earthPath = "C:/Users/123ke/projects/opengl/textures/earth4k.jpg";
 
 int main()
 {
     // Create objects
     Window myWindow(width, height, "sat_sim");
-    Planet earth(earthPath, earthvs, earthfs);
     Camera myCamera(static_cast<float>(width), static_cast<float>(height));
+    Planet earth(earthPath, earthvs, earthfs, myCamera);
     Gui myGui(myWindow.getGLFWwindow());
     Skybox skybox(skyboxvs, skyboxfs);
 

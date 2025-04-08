@@ -77,11 +77,11 @@ void Skybox::render(Camera &camera)
 {
     glDepthFunc(GL_LEQUAL);
 
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 
     skyboxShader.use();
-    skyboxShader.setInt("skybox", 1);
+    skyboxShader.setInt("skybox", 0);
 
     skyboxShader.setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
     skyboxShader.setMat4("projection", camera.getProjectionMatrix());

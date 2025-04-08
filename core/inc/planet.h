@@ -12,13 +12,15 @@ public:
     float tilt;
     float rotationSpeed;
 
-    Planet(const char *texturePath, const char *vertexShader, const char *fragmentShader);
+    Planet(const char *texturePath, const char *vertexShader, const char *fragmentShader, Camera &camera);
 
     void renderEarth(Camera &camera);
     void update();
 
 private:
     GLuint planetTexture;
+    GLuint cloudTexture;
+    glm::vec3 initLighting;
     Shader shader;
     float currentAngle = 0.0f;
     float lastUpdateTime = 0.0f;

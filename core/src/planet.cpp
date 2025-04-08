@@ -9,37 +9,50 @@
 #include "stb.h"
 #include <planet.h>
 
-Planet::Planet(const char *texturePath, const char *vertexShader, const char *fragmentShader)
+Planet::Planet(const char *texturePath, const char *vertexShader, const char *fragmentShader, Camera &camera)
     : Sphere(1.0f, 100, 100),
       shader(vertexShader, fragmentShader),
       planetTexture(setTexture(texturePath))
 {
+    initLighting = camera.getPosition();
     rotationSpeed = 2 * glm::pi<float>() / 86164.0f;
     tilt = 23.5f;
+    cloudTexture = setTexture("C:/Users/123ke/projects/opengl/textures/cloud2.png");
 }
 void Planet::renderEarth(Camera &camera)
 {
     update();
-    // set texture
-    glActiveTexture(GL_TEXTURE0);
+
+    // set earth texture
+    glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, planetTexture);
 
+    // set cloud texture
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, cloudTexture);
+
+    // alpha blending for clouds
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // set up earth matrices
     glm::mat4 model = rotate(tilt, currentAngle);
     shader.use();
-    shader.setInt("sphereTexture", 0);
+    shader.setInt("sphereTexture", 1);
+    shader.setInt("cloudTexture", 2);
     shader.setMat4("projection", camera.getProjectionMatrix());
     shader.setMat4("view", camera.getViewMatrix());
     shader.setMat4("model", model);
-    // Render solid sphere
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    // setup lighting
+    shader.setVec3("lightPos", initLighting);
+    shader.setVec3("viewPos", camera.getPosition());
+    shader.setVec3("lightColor", glm::vec3(1.0f));
+
+    // render
     render(shader);
 
-    // Render wire overlay on top
-    glEnable(GL_POLYGON_OFFSET_LINE);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    shader.use();
-    render(shader);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_BLEND);
 }
 void Planet::update()
 {

@@ -21,6 +21,7 @@ public:
     void setMouse(GLFWwindow *window, int button, int action, int mods);
     void setCursor(GLFWwindow *window, double xpos, double ypos);
     void reset();
+    glm::vec3 getPosition() const;
 
 private:
     // Orbiting parameters

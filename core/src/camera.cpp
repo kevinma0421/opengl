@@ -79,3 +79,10 @@ void Camera::reset()
     yaw = -90.0f;
     pitch = 0.0f;
 }
+glm::vec3 Camera::getPosition() const
+{
+    float x = center.x + radius * cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+    float y = center.y + radius * sin(glm::radians(pitch));
+    float z = center.z + radius * cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+    return glm::vec3(x, y, z);
+}
