@@ -5,11 +5,32 @@ Gui::Gui(GLFWwindow *window)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
+    ImFontConfig font_cfg;
+    font_cfg.OversampleH = 4;    // Horizontal oversampling
+    font_cfg.OversampleV = 4;    // Vertical oversampling
+    font_cfg.PixelSnapH = false; // Smooth horizontal positioning
+
+    ImFont *font = io.Fonts->AddFontFromFileTTF("C:/Users/123ke/projects/opengl/textures/static/Roboto-Black.ttf", 12.0f, &font_cfg);
+    io.FontDefault = font;
     (void)io;
 
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    speedOptions[0] = 20000;
+    speedOptions[1] = 0;
+    // speedOptions[2] = 30000;
+
+    currIndex = 0;
+
+    GLuint texPause = LoadTexture("C:/Users/123ke/projects/opengl/textures/pause.png");
+    GLuint texPlay = LoadTexture("C:/Users/123ke/projects/opengl/textures/play.png");
+    GLuint texFast = LoadTexture("C:/Users/123ke/projects/opengl/textures/forward.png");
+
+    speedButtons[0] = texPause;
+    speedButtons[1] = texPlay;
+    // speedButtons[2] = texFast;
 }
 Gui::~Gui()
 {
@@ -23,35 +44,49 @@ void Gui::frame(Camera &camera, float &rotationSpeed)
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Controls");
-    ImGui::InputFloat("Precise Speed", &rotationSpeed, 0.1f, 0.1f, "%.6f");
-
-    // Clamp to 0 - 5 range
-    if (rotationSpeed < 0.0f)
-        rotationSpeed = 0.0f;
-    if (rotationSpeed > 3.0f)
-        rotationSpeed = 3.0f;
-    if (rotationSpeed == 3.0f)
-        ImGui::TextColored(ImVec4(1, 1, 0, 1), "Max speed reached (3.0)");
-
-    if (ImGui::Button("Reset"))
-    {
-        camera.reset();
-        rotationSpeed = 2 * glm::pi<float>() / 86164.0f;
-    }
-    ImGui::End();
-
+    // --- Overlay buttons (floating, transparent background) ---
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 10.0f, 10.0f), ImGuiCond_Always, ImVec2(1.0f, 0.0f));
-    ImGui::SetNextWindowBgAlpha(0.35f);
 
-    if (ImGui::Begin("FPS Overlay", nullptr,
-                     ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize |
-                         ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoMove))
+    ImGui::SetNextWindowBgAlpha(0.0f); // Fully transparent
+
+    ImGui::Begin("SpeedControlOverlay", nullptr,
+                 ImGuiWindowFlags_NoDecoration |
+                     ImGuiWindowFlags_AlwaysAutoResize |
+                     ImGuiWindowFlags_NoSavedSettings |
+                     ImGuiWindowFlags_NoFocusOnAppearing |
+                     ImGuiWindowFlags_NoNav |
+                     ImGuiWindowFlags_NoBackground);
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+
+    ImTextureID texID = static_cast<ImTextureID>(speedButtons[currIndex]);
+    if (ImGui::ImageButton("speed_button", texID, ImVec2(16, 16)))
     {
-        ImGui::Text("FPS: %d", fps());
+        currIndex = (currIndex + 1) % 2;
     }
+    ImGui::PopStyleColor(3);
     ImGui::End();
+
+    // --- FPS overlay (top-right corner) ---
+    ImGui::SetNextWindowPos(ImVec2(10.0f, 10.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+
+    ImGui::Begin("FPS Overlay", nullptr,
+                 ImGuiWindowFlags_NoDecoration |
+                     ImGuiWindowFlags_AlwaysAutoResize |
+                     ImGuiWindowFlags_NoFocusOnAppearing |
+                     ImGuiWindowFlags_NoNav |
+                     ImGuiWindowFlags_NoMove);
+
+    ImGui::Text("FPS: %d", fps());
+    ImGui::End();
+
+    // Update speed based on selected index
+    rotationSpeed = speedOptions[currIndex] * glm::pi<float>() / 86164.0f;
 }
+
 void Gui::render()
 {
     ImGui::Render();
@@ -74,4 +109,24 @@ int Gui::fps()
     }
 
     return lastFPS;
+}
+GLuint Gui::LoadTexture(const char *filename)
+{
+    int width, height, channels;
+    unsigned char *data = stbi_load(filename, &width, &height, &channels, 4);
+    if (!data)
+        return 0;
+
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_image_free(data);
+    return textureID;
 }
