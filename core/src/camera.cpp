@@ -86,3 +86,7 @@ glm::vec3 Camera::getPosition() const
     float z = center.z + radius * cos(glm::radians(pitch)) * sin(glm::radians(yaw));
     return glm::vec3(x, y, z);
 }
+float Camera::getRadius() const
+{
+    return radius;
+}

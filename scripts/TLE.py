@@ -40,8 +40,20 @@ def parse_tle():
             line = f"{name} {inclination_deg} {raan_deg} {eccentricity} {arg_perigee_deg} {mean_anomaly_deg} {mean_motion} {epoch}\n"
             out.write(line)
 def starlink_tle():
+    def is_valid(line):
+        parts = line.strip().split()
+        if len(parts) < 8:
+            return False
+        try:
+            # Try converting all 7 fields after the name to float
+            [float(p) for p in parts[1:8]]
+            return True
+        except ValueError:
+            return False
+
     with open("parsed_data.txt", "r") as f:
-        lines = [line for line in f if "STARLINK" in line]
+        lines = [line for line in f if "STARLINK" in line and is_valid(line)]
+
     with open("starlink.txt", "w") as out:
         out.writelines(lines)
 # fetch_tle()

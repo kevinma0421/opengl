@@ -21,6 +21,7 @@ public:
     void setMouse(GLFWwindow *window, int button, int action, int mods);
     void setCursor(GLFWwindow *window, double xpos, double ypos);
     void reset();
+    float getRadius() const;
     glm::vec3 getPosition() const;
 
 private:

@@ -18,7 +18,7 @@ Gui::Gui(GLFWwindow *window)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    speedOptions[0] = 20000;
+    speedOptions[0] = 60;
     speedOptions[1] = 0;
     // speedOptions[2] = 30000;
 
@@ -84,7 +84,7 @@ void Gui::frame(Camera &camera, float &rotationSpeed)
     ImGui::End();
 
     // Update speed based on selected index
-    rotationSpeed = speedOptions[currIndex] * glm::pi<float>() / 86164.0f;
+    rotationSpeed = speedOptions[currIndex] * 2.0f * glm::pi<float>() / 86164.0f;
 }
 
 void Gui::render()
